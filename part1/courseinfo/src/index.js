@@ -8,12 +8,23 @@ const Header = (props) => {
   )
 }
 
+//Part renders name and number of exercises for particular part
+const Part = (props) => {
+  return (
+    <p>
+      {props.name} {props.exercise}
+    </p>
+  )
+}
+
 //Content renders parts and exercises
 const Content = (props) => {
   return (
-    <p>
-      {props.part} {props.exercise}
-    </p>
+    <div>
+      <Part name={props.names[0]} exercise={props.exercises[0]} />
+      <Part name={props.names[1]} exercise={props.exercises[1]} />
+      <Part name={props.names[2]} exercise={props.exercises[2]} />
+    </div>
   )
 }
 
@@ -33,13 +44,13 @@ const App = () => {
   const exercises2 = 7
   const part3 = 'State of a component'
   const exercises3 = 14
-
+  const namesArr = [part1, part2, part3]
+  const exercisesArr = [exercises1, exercises2, exercises3]
+  
   return (
     <div>
       <Header course={course} />
-      <Content part={part1} exercise={exercises1} />
-      <Content part={part2} exercise={exercises2} />
-      <Content part={part3} exercise={exercises3} />
+      <Content names={namesArr} exercises={exercisesArr} />
       <Total number={exercises1 + exercises2 + exercises3} />
     </div>
   )
