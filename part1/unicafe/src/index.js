@@ -5,20 +5,15 @@ import ReactDOM from 'react-dom'
 const Button = ({text, onClick}) => <button onClick={onClick}>{text}</button>
 
 //Define Display component
-const Display = ({text, count}) => {
-	if (isNaN(count)) {
-		return (
-			<div>{text} N.A</div>
-		)
-	}
-
+const Statistic = ({text, value}) => {
+	// adds a % for the statistic for percentage of positive feedback
 	if (text === 'positive') {
 		return (
-			<div>{text} {count} %</div>
+			<div>{text} {value} %</div>
 		)
 	}
 	return (
-		<div>{text} {count}</div>
+		<div>{text} {value}</div>
 	)
 	
 }
@@ -35,11 +30,11 @@ const Statistics = ({good, neutral, bad, total, score}) => {
 	return (
 		<div>
 			<h1>statistics</h1>
-			<Display text='good' count={good} />
-			<Display text='neutral' count={neutral} />
-			<Display text='bad' count={bad} />
-			<Display text='average' count={score / total} />
-			<Display text='positive' count={(good / total) * 100} />
+			<Statistic text='good' value={good} />
+			<Statistic text='neutral' value={neutral} />
+			<Statistic text='bad' value={bad} />
+			<Statistic text='average' value={score / total} />
+			<Statistic text='positive' value={(good / total) * 100} />
 		</div>
 	)
 }
