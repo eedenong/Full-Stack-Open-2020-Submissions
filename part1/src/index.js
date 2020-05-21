@@ -1,30 +1,60 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-//import './index.css';
-//import * as serviceWorker from './serviceWorker';
 
-// ReactDOM.render(
-//   <React.StrictMode>
-//     <App />
-//   </React.StrictMode>,
-//   document.getElementById('root')
-// );
-const Hello = (props) => {
+const History = ({ allClicks }) => {
+  if (allClicks.length === 0) {
+    return (
+      <div>
+        please click a button
+      </div>
+    )
+  } 
+
   return (
     <div>
-      <p>Hello {props.name}, you are {props.age} years old</p>
+      button press history: {allClicks.join(' ')}
     </div>
   )
 }
 
+const Button = ({ text, onClick }) => <button onClick={onClick}>{text}</button>
+
 const App = () => {
-  const name = "Alice"
-  const age = 10
+  const [leftCount, setLeft] = useState(0)
+  const [rightCount, setRight] = useState(0)
+  const [allClicks, setAll] = useState([])
+
+  const handleLeftClick = () => {
+    setAll(allClicks.concat('L'))
+    setLeft(leftCount + 1)
+  }
+
+  const handleRightClick = () => {
+    setAll(allClicks.concat('R'))
+    setRight(rightCount + 1)
+  }
+
+
+  const [value, setValue] = useState(10)
+
+  const setToValue = (value) => {
+    setValue(value)
+  }
+  
   return (
     <div>
-      <h1>Greetings</h1>
-      <Hello name={name} age={age}/>
-      <Hello name="Bob" age={age + 10}/>
+      <div>
+        {leftCount}
+        <Button onClick={handleLeftClick} text='left'/>
+        <Button onClick={handleRightClick} text='right'/>
+        {rightCount}
+        <History allClicks={allClicks}/>
+      </div>
+      <div>
+        <p>value: {value} </p>
+        <Button onClick={() => setToValue(10)} text='ten'/>
+        <Button onClick={() => setToValue(1000)} text='thousand' />
+      </div>
     </div>
   )
 } 
