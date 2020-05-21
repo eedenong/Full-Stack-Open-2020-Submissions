@@ -24,6 +24,14 @@ const Display = ({text, count}) => {
 }
 
 const Statistics = ({good, neutral, bad, total, score}) => {
+	if (total === 0) {
+		return (
+			<div>
+				<h1>statistics</h1>
+				<div>No feedback given</div>
+			</div>
+		)
+	}
 	return (
 		<div>
 			<h1>statistics</h1>
