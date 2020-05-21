@@ -6,6 +6,25 @@ function getRandomInteger(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
+//finds the index of the maximum element in the array
+function findIndexOfMax(array) {
+	if (array.length === 0) {
+		return -1
+	}
+
+	let max = array[0]
+	let maxIdx = 0
+
+	for (let i = 0; i < array.length; i++) {
+		if (array[i] > max) {
+			max = array[i]
+			maxIdx = i
+		}
+	}
+
+	return maxIdx
+}
+
 const App = (props) => {
   const [selected, setSelected] = useState(0)
   
@@ -24,12 +43,25 @@ const App = (props) => {
 	copy[selected] += 1
 	setScore(copy)
   }
+
+  // find the index of the anecdote with the most votes
+  const maxVotesAnecdoteIndex = findIndexOfMax(scores)
+  
   return (
     <div>
-		<div>{props.anecdotes[selected]}</div>
-		<div>has {scores[selected]} votes</div>
-		<button onClick={handleVote}>vote</button>
-      	<button onClick={handleNextAnecdote}>next anecdote</button>
+		<div>
+			<h1>Anecdote of the day</h1>
+			<div>{props.anecdotes[selected]}</div>
+			<div>has {scores[selected]} votes</div>
+			<button onClick={handleVote}>vote</button>
+			<button onClick={handleNextAnecdote}>next anecdote</button>
+		</div>
+		<div>
+			<h1>Anecdote with most votes</h1>
+			<div>{props.anecdotes[maxVotesAnecdoteIndex]}</div>
+			<div>has {scores[maxVotesAnecdoteIndex]} votes</div>
+		</div>
+		
     </div>
   )
 }
