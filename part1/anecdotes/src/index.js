@@ -8,16 +8,28 @@ function getRandomInteger(min, max) {
 
 const App = (props) => {
   const [selected, setSelected] = useState(0)
+  
+  const zeroArray = new Array(props.anecdotes.length).fill(0)
+  const [scores, setScore] = useState(zeroArray)
 
-  const handleClick = () => {
+  const handleNextAnecdote = () => {
 	const randInt = getRandomInteger(0, 5)
 	console.log("Current random integer is:", randInt)
 	setSelected(randInt)
   }
+
+  const handleVote = () => {
+	console.log("Voted for ", selected)
+	const copy = [...scores]
+	copy[selected] += 1
+	setScore(copy)
+  }
   return (
     <div>
 		<div>{props.anecdotes[selected]}</div>
-      <button onClick={handleClick}>next anecdote</button>
+		<div>has {scores[selected]} votes</div>
+		<button onClick={handleVote}>vote</button>
+      	<button onClick={handleNextAnecdote}>next anecdote</button>
     </div>
   )
 }
