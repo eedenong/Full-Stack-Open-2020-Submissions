@@ -9,11 +9,17 @@ const Statistic = ({text, value}) => {
 	// adds a % for the statistic for percentage of positive feedback
 	if (text === 'positive') {
 		return (
-			<div>{text} {value} %</div>
+			<tr>
+				<td>{text}</td>
+				<td>{value} %</td>
+			</tr>
 		)
 	}
 	return (
-		<div>{text} {value}</div>
+		<tr>
+			<td>{text}</td>
+			<td>{value}</td>
+		</tr>
 	)
 	
 }
@@ -30,11 +36,16 @@ const Statistics = ({good, neutral, bad, total, score}) => {
 	return (
 		<div>
 			<h1>statistics</h1>
-			<Statistic text='good' value={good} />
-			<Statistic text='neutral' value={neutral} />
-			<Statistic text='bad' value={bad} />
-			<Statistic text='average' value={score / total} />
-			<Statistic text='positive' value={(good / total) * 100} />
+			<table>
+				<tbody>
+					<Statistic text='good' value={good} />
+					<Statistic text='neutral' value={neutral} />
+					<Statistic text='bad' value={bad} />
+					<Statistic text='all' value={total} />
+					<Statistic text='average' value={score / total} />
+					<Statistic text='positive' value={(good / total) * 100} />
+				</tbody>
+			</table>
 		</div>
 	)
 }
