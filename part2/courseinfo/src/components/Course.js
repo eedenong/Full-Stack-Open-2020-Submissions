@@ -3,15 +3,18 @@ import Header from './Header'
 import Content from './Content'
 
 const Course = ({ course }) => {
-    console.log('Inside Course component');
     const courseName = course.name
-    console.log('Course name is ', courseName);
     const parts = course.parts //this variable parts is an array
-    console.log('parts is ', parts);
+
+    //sumObj is an object where the sum attribute contains the sum of exercises
+    const sumObj = parts.reduce((res, part) => {
+        return {exercises: res.exercises + part.exercises}
+    })
     return (
         <div>
             <Header name={courseName} />
             <Content parts={parts} />
+            <p><b>total of {sumObj.exercises} exercises</b></p>
         </div>
     )
 }
