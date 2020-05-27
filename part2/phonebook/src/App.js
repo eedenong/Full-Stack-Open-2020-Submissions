@@ -9,12 +9,25 @@ const App = () => {
   // event handler for add button
   const addPerson = (event) => {
     event.preventDefault()
-    // create a person and add it
-    const newPerson = {
-      name: newName
+    // check if the name already exists in the persons array
+    let dupeExists = false
+    for (let i = 0; i < persons.length; i++) {
+      if (persons[i].name === newName) {
+        dupeExists = true
+      }
     }
-    setPersons(persons.concat(newPerson))
-    setNewName('')
+
+    if (dupeExists) {
+      alert(`${newName} is already added to phonebook`)
+    } else {
+      // create a person and add it
+      const newPerson = {
+        name: newName
+      }
+      setPersons(persons.concat(newPerson))
+      setNewName('')
+    }
+    
   }
 
   // event handler for name input
