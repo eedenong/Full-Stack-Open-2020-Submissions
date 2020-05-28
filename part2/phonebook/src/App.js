@@ -1,4 +1,7 @@
 import React, { useState } from 'react'
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -6,12 +9,13 @@ const App = () => {
     { name: 'Ada Lovelace', number: '39-44-5323523' },
     { name: 'Dan Abramov', number: '12-43-234345' },
     { name: 'Mary Poppendieck', number: '39-23-6423122' }
-  ]) 
+  ])
 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
-  const [ newFilter, setFilterValue] = useState('')
+  const [ newFilter, setFilterValue ] = useState('')
   const [ showAll, setShowAll ] = useState(true)
+<<<<<<< HEAD
 
   // event handler for add button
   const addPerson = (event) => {
@@ -75,30 +79,18 @@ const App = () => {
     return nameLowerCased.includes(filterLowerCased)
   })
 
+=======
+  
+>>>>>>> 7e41e20... Ex 2.10
   return (
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={showFiltered} >
-        <div>
-          filter shown with: <input value={newFilter} onChange={handleFilterChange} />
-        </div>
-      </form>
+      <Filter newFilter={newFilter} setFilterValue={setFilterValue} showAll={showAll} setShowAll={setShowAll}/>
       <h2>Add new Number</h2>
-      <form onSubmit={addPerson} >
-        <div>
-          name: <input value={newName} onChange={handleNameChange} />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNumberChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm persons={persons} setPersons={setPersons}
+        newName={newName} newNumber={newNumber} setNewName={setNewName} setNewNumber={setNewNumber} />
       <h2>Numbers</h2>
-      <div>
-        {personsToShow.map(person => <div key={person.name}>{person.name} {person.number}</div>)}
-      </div>
+      <Persons persons={persons} showAll={showAll} newFilter={newFilter}/>
     </div>
   )
 }
