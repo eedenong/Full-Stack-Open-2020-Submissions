@@ -31,7 +31,7 @@ const App = () => {
     const validEntry = !dupeExists
 
     if (validEntry) {
-      console.log('entry is valid, createing person');
+      console.log('entry is valid, creating person');
       // create a person and add it
       const newPerson = {
         name: newName,
