@@ -21,8 +21,16 @@ const remove = (id) => {
     })
 }
 
+const edit = (newPerson) => {
+    const request = axios.put(`${baseUrl}/${newPerson.id}`, newPerson)
+    return request.then(response => {
+        console.log('response data from edit is ', response.data);
+        return response.data
+    })
+}
 export default {
     getAll,
     create,
-    remove
+    remove,
+    edit
 }

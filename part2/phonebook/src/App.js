@@ -33,7 +33,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Filter newFilter={newFilter} setFilterValue={setFilterValue} showAll={showAll} setShowAll={setShowAll}/>
-      <h2>Add new Number</h2>
+      <h2>Add new number</h2>
       <PersonForm persons={persons} setPersons={setPersons} newName={newName} newNumber={newNumber}
        setNewName={setNewName} setNewNumber={setNewNumber} count={count} setCount={setCount} />
       <h2>Numbers</h2>
