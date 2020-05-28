@@ -11,7 +11,7 @@ const App = () => {
 
   // effect hook for fetching country data
   useEffect(() => {
-    console.log('effect')
+    console.log('effect hook for country data')
     axios
       .get('https://restcountries.eu/rest/v2/all')
       .then(response => {
