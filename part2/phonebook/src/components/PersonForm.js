@@ -1,7 +1,7 @@
 import React from 'react'
 import numberService from '../services/numbers'
 
-const PersonForm = ({persons, setPersons, newName, newNumber, setNewName, setNewNumber, baseUrl}) => {
+const PersonForm = ({persons, setPersons, newName, newNumber, setNewName, setNewNumber}) => {
     
     // event handler for add button
     const addPerson = (event) => {
