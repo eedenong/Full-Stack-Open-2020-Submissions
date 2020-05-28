@@ -1,7 +1,7 @@
 import React from 'react'
 import numberService from '../services/numbers'
 
-const PersonForm = ({persons, setPersons, newName, newNumber, setNewName, setNewNumber}) => {
+const PersonForm = ({persons, setPersons, newName, newNumber, setNewName, setNewNumber, count, setCount}) => {
     
     // event handler for add button
     const addPerson = (event) => {
@@ -27,17 +27,21 @@ const PersonForm = ({persons, setPersons, newName, newNumber, setNewName, setNew
             const newPerson = {
                 name: newName,
                 number: newNumber,
-                id: persons.length + 1
+                id: count + 1
             }
-            console.log('new person created');
-            console.log('making post request');
+            console.log('new person created: ', newPerson);
             //define the axios post request to put data into the db
             numberService
                 .create(newPerson)
                 .then(returnedPerson => {
+                    console.log('post request response is ', returnedPerson);
                     setPersons(persons.concat(returnedPerson))
                     setNewName('')
-                    setNewNumber('')  
+                    setNewNumber('') 
+                    setCount(count + 1)
+                })
+                .catch(error => {
+                    console.log(error.message);
                 })
             console.log('person added to database');
             console.log('persons list in addPerson is ', persons)
