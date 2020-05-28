@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 const PersonForm = ({persons, setPersons, newName, newNumber, setNewName, setNewNumber}) => {
     
@@ -17,14 +17,7 @@ const PersonForm = ({persons, setPersons, newName, newNumber, setNewName, setNew
             alert(`${newName} is already added to phonebook`)
         }
 
-        // check if the number entered is valid
-        const invalidNumber = isNaN(newNumber)
-
-        if (invalidNumber) {
-            alert(`${newNumber} is not a valid number!`)
-        }
-
-        const validEntry = !dupeExists && !invalidNumber
+        const validEntry = !dupeExists
 
         if (validEntry) {
             console.log('entry is valid, createing person');
