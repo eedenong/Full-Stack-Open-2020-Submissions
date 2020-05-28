@@ -9,6 +9,7 @@ const Persons = ({persons, showAll, newFilter}) => {
         return nameLowerCased.includes(filterLowerCased)
     })
 
+    console.log('personsToShow in Persons is ', personsToShow);
     return (
         <div>
             {personsToShow.map(person => <div key={person.name}>{person.name} {person.number}</div>)}

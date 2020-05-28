@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
-import axios from 'axios'
+import numberService from './services/numbers'
 
 const App = () => {
   const [ persons, setPersons ] = useState([])
@@ -10,16 +10,15 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
   const [ newFilter, setFilterValue ] = useState('')
   const [ showAll, setShowAll ] = useState(true)
-  const baseUrl = 'http://localhost:3001/persons'
-  //get from database
+  
+  //get persons from database
   useEffect(() => {
     console.log('effect');
-    axios
-      .get(baseUrl)
-      .then(response => {
-        console.log('promise fulfilled');
-        console.log('setting persons');
-        setPersons(response.data)
+    numberService
+      .getAll()
+      .then(returnedPersons => {
+        console.log('returnedPersons is', returnedPersons);
+        setPersons(returnedPersons)
       })
   }, [])
 
@@ -29,7 +28,7 @@ const App = () => {
       <Filter newFilter={newFilter} setFilterValue={setFilterValue} showAll={showAll} setShowAll={setShowAll}/>
       <h2>Add new Number</h2>
       <PersonForm persons={persons} setPersons={setPersons}
-        newName={newName} newNumber={newNumber} setNewName={setNewName} setNewNumber={setNewNumber} baseUrl={baseUrl} />
+        newName={newName} newNumber={newNumber} setNewName={setNewName} setNewNumber={setNewNumber} />
       <h2>Numbers</h2>
       <Persons persons={persons} showAll={showAll} newFilter={newFilter}/>
     </div>

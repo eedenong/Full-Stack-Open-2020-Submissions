@@ -1,5 +1,5 @@
 import React from 'react'
-import axios from 'axios'
+import numberService from '../services/numbers'
 
 const PersonForm = ({persons, setPersons, newName, newNumber, setNewName, setNewNumber, baseUrl}) => {
     
@@ -17,7 +17,7 @@ const PersonForm = ({persons, setPersons, newName, newNumber, setNewName, setNew
         if (dupeExists) {
             alert(`${newName} is already added to phonebook`)
         }
-
+        
         const validEntry = !dupeExists
 
         if (validEntry) {
@@ -32,14 +32,15 @@ const PersonForm = ({persons, setPersons, newName, newNumber, setNewName, setNew
             console.log('new person created');
             console.log('making post request');
             //define the axios post request to put data into the db
-            axios
-                .post(baseUrl, newPerson)
-                .then(response => {
-                    setPersons(persons.concat(response.data))
+            numberService
+                .create(newPerson)
+                .then(returnedPerson => {
+                    setPersons(persons.concat(returnedPerson))
                     setNewName('')
                     setNewNumber('')  
                 })
-            
+            console.log('person added to database');
+            console.log('persons list in addPerson is ', persons)
         } else {
             console.log('entry is invalid');
         }
