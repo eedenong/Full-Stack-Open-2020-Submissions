@@ -1,8 +1,5 @@
 import React from 'react'
-<<<<<<< HEAD
-=======
 import axios from 'axios'
->>>>>>> cd97898... Ex 2.15
 
 const PersonForm = ({persons, setPersons, newName, newNumber, setNewName, setNewNumber, baseUrl}) => {
     
