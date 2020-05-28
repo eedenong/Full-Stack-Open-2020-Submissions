@@ -10,9 +10,7 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
   const [ newFilter, setFilterValue ] = useState('')
   const [ showAll, setShowAll ] = useState(true)
-<<<<<<< HEAD
-=======
-
+  
   //get from database
   useEffect(() => {
     console.log('effect');
@@ -24,8 +22,7 @@ const App = () => {
         setPersons(response.data)
       })
   }, [])
-  
->>>>>>> 96f058e... Ex 2.11
+
   return (
     <div>
       <h2>Phonebook</h2>
