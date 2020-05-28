@@ -1,6 +1,10 @@
 import React from 'react'
+<<<<<<< HEAD
+=======
+import axios from 'axios'
+>>>>>>> cd97898... Ex 2.15
 
-const PersonForm = ({persons, setPersons, newName, newNumber, setNewName, setNewNumber}) => {
+const PersonForm = ({persons, setPersons, newName, newNumber, setNewName, setNewNumber, baseUrl}) => {
     
     // event handler for add button
     const addPerson = (event) => {
@@ -20,15 +24,25 @@ const PersonForm = ({persons, setPersons, newName, newNumber, setNewName, setNew
         const validEntry = !dupeExists
 
         if (validEntry) {
-            console.log('entry is valid, createing person');
+            //if its a valid entry, create and do a post request
+            console.log('entry is valid, creating person');
             // create a person and add it
             const newPerson = {
-            name: newName,
-            number: newNumber
+                name: newName,
+                number: newNumber,
+                id: persons.length + 1
             }
-            setPersons(persons.concat(newPerson))
-            setNewName('')
-            setNewNumber('')
+            console.log('new person created');
+            console.log('making post request');
+            //define the axios post request to put data into the db
+            axios
+                .post(baseUrl, newPerson)
+                .then(response => {
+                    setPersons(persons.concat(response.data))
+                    setNewName('')
+                    setNewNumber('')  
+                })
+            
         } else {
             console.log('entry is invalid');
         }
