@@ -21,6 +21,7 @@ const Numbers = ({persons, setPersons, showAll, newFilter, setError, setNotifica
                         setNotification(`${person.name} deleted`)
                     })
                     .catch(error => {
+                        setPersons(persons.filter(p => p.id !== deleteId))
                         setError(true)
                         setNotification(`${person.name} has already been removed from the server`)
 
