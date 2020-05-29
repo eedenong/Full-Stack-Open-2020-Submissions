@@ -2,7 +2,7 @@ import React from 'react'
 import Person from './Person'
 import numberService from '../services/numbers'
 
-const Numbers = ({persons, setPersons, showAll, newFilter}) => {
+const Numbers = ({persons, setPersons, showAll, newFilter, setError, setNotification}) => {
     const personsToShow = showAll ? persons : persons.filter(person => {
         const nameLowerCased = person.name.toLowerCase()
         const filterLowerCased = newFilter.toLowerCase()
@@ -18,6 +18,16 @@ const Numbers = ({persons, setPersons, showAll, newFilter}) => {
                     .remove(deleteId)
                     .then(ret => {
                         setPersons(persons.filter(p => p.id !== deleteId))
+                        setNotification(`${person.name} deleted`)
+                    })
+                    .catch(error => {
+                        setError(true)
+                        setNotification(`${person.name} has already been removed from the server`)
+
+                        setTimeout(() => {
+                            setNotification(null)
+                            setError(false)
+                        }, 3000)
                     })
             }
         }

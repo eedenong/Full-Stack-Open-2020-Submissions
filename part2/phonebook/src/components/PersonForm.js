@@ -1,7 +1,7 @@
 import React from 'react'
 import numberService from '../services/numbers'
 
-const PersonForm = ({persons, setPersons, newName, newNumber, setNewName, setNewNumber, count, setCount, setNotification}) => {
+const PersonForm = ({persons, setPersons, newName, newNumber, setNewName, setNewNumber, count, setCount, setNotification, setError}) => {
     
     function addEntry() {
         console.log('creating person object to be added');
@@ -54,7 +54,18 @@ const PersonForm = ({persons, setPersons, newName, newNumber, setNewName, setNew
                 setTimeout(() => {
                     setNotification(null)
                 }, 3000)
-            })
+            }).catch(error => {
+                // if there is an error means that the person does not exist in the db
+                setError(true)
+                setNotification(`Information of ${newPerson.name} has already been removed from the server.`)
+                
+                setTimeout(() => {
+                    setNotification(null)
+                    setError(false)
+                }, 3000)
+            }
+
+            )
     }
     // function to check phonebook if there is a person with an already existing name 
     function checkDuplicateName() {
