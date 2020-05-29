@@ -1,7 +1,7 @@
 import React from 'react'
 import numberService from '../services/numbers'
 
-const PersonForm = ({persons, setPersons, newName, newNumber, setNewName, setNewNumber, count, setCount}) => {
+const PersonForm = ({persons, setPersons, newName, newNumber, setNewName, setNewNumber, count, setCount, setNotification}) => {
     
     function addEntry() {
         console.log('creating person object to be added');
@@ -21,6 +21,10 @@ const PersonForm = ({persons, setPersons, newName, newNumber, setNewName, setNew
                 setNewName('')
                 setNewNumber('') 
                 setCount(count + 1)
+                setNotification(`Added ${newName}`)
+                setTimeout(() => {
+                    setNotification(null)
+                }, 3000)
             })
             .catch(error => {
                 console.log(error.message);
@@ -46,6 +50,10 @@ const PersonForm = ({persons, setPersons, newName, newNumber, setNewName, setNew
                         return person
                     }
                 }))
+                setNotification(`Edited ${newName}'s number to ${newNumber}`)
+                setTimeout(() => {
+                    setNotification(null)
+                }, 3000)
             })
     }
     // function to check phonebook if there is a person with an already existing name 
