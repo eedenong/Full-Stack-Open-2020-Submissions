@@ -19,7 +19,7 @@ const App = () => {
   
   //get persons from database
   useEffect(() => {
-    console.log('effect');
+    console.log('Getting list of persons from database');
     numberService
       .getAll()
       .then(returnedPersons => {

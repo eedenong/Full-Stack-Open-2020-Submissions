@@ -4,7 +4,6 @@ import numberService from '../services/numbers'
 const PersonForm = ({persons, setPersons, newName, newNumber, setNewName, setNewNumber, count, setCount, setNotification, setError}) => {
     
     function addEntry() {
-        console.log('creating person object to be added');
         // create a person and add it
         const newPerson = {
             name: newName,
