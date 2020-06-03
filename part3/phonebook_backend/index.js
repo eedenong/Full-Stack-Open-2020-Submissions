@@ -22,9 +22,11 @@ const getInfoPage = () => {
 
 //get all persons
 app.get('/api/persons', (request, response) =>  {
-    Person.find({}).then(persons => {
-        response.json(persons)
-    })
+    Person.find({})
+        .then(persons => {
+            response.json(persons)
+        })
+        .catch(error => next(error))
 })
 
 //info page
@@ -34,9 +36,11 @@ app.get('/info', (request, response) =>
 
 //get info for single person
 app.get('/api/persons/:id', (request, response) => {
-    Person.findById(request.params.id).then(person =>{
-        response.json(person)
-    })
+    Person.findById(request.params.id)
+        .then(person =>{
+            response.json(person)
+        })
+        .catch(error => next(error))
 })
 
 //delete request for person of specified id
@@ -82,9 +86,11 @@ app.post('/api/persons', (request, response) => {
     })
 
     //save the newly created Person to database
-    person.save().then(savedPerson => {
-        response.json(savedPerson)
-    })
+    person.save()
+        .then(savedPerson => {
+            response.json(savedPerson)
+        })
+        .catch(error => next(error))
 
 })
 
@@ -101,18 +107,18 @@ const unknownEnpoint = (request, response) => {
     response.status(404).send({ error:'unknown endpoint'})
   }
   
-  const errorHandler = (error, request, response, next) => {
+const errorHandler = (error, request, response, next) => {
     console.log(error.message);
     if (error.name === 'CastError') {
-      return response.status(400).send({ error: 'malformatted id'})
+        return response.status(400).send({ error: 'malformatted id'})
     }
-  
+
     next(error)
-  }
-  //handler of requests with result to errors
-  app.use(errorHandler)
-  
-  app.use(unknownEnpoint)
+}
+//handler of requests with result to errors
+app.use(errorHandler)
+
+app.use(unknownEnpoint)
 
 const PORT = process.env.PORT
 app.listen(PORT)
