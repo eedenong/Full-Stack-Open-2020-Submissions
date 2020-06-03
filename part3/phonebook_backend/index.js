@@ -41,10 +41,11 @@ app.get('/api/persons/:id', (request, response) => {
 
 //delete request for person of specified id
 app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    //update the list to exclude the deleted person
-    persons = persons.filter(p => p.id !== id)
-    response.status(204).end()
+    Person.findByIdAndDelete(request.params.id)
+        .then(result => {
+            response.status(204).end()
+        })
+        .catch(error => next(error))
 })
 
 //post request to add person
@@ -96,7 +97,22 @@ const token = morgan.token('body', (request, response) => {
     }
 })
 
-
+const unknownEnpoint = (request, response) => {
+    response.status(404).send({ error:'unknown endpoint'})
+  }
+  
+  const errorHandler = (error, request, response, next) => {
+    console.log(error.message);
+    if (error.name === 'CastError') {
+      return response.status(400).send({ error: 'malformatted id'})
+    }
+  
+    next(error)
+  }
+  //handler of requests with result to errors
+  app.use(errorHandler)
+  
+  app.use(unknownEnpoint)
 
 const PORT = process.env.PORT
 app.listen(PORT)
