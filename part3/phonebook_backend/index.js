@@ -21,7 +21,7 @@ const getInfoPage = () => {
 }
 
 //get all persons
-app.get('/api/persons', (request, response) =>  {
+app.get('/api/persons', (request, response, next) =>  {
     Person.find({})
         .then(persons => {
             response.json(persons)
@@ -35,7 +35,7 @@ app.get('/info', (request, response) =>
 )
 
 //get info for single person
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
     Person.findById(request.params.id)
         .then(person =>{
             response.json(person)
@@ -44,7 +44,7 @@ app.get('/api/persons/:id', (request, response) => {
 })
 
 //delete request for person of specified id
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response, next) => {
     Person.findByIdAndDelete(request.params.id)
         .then(result => {
             response.status(204).end()
@@ -53,10 +53,10 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 
 //post request to add person
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
     //request.body gets the object specified in the create_person.rest file
     const body = request.body
-    // if content body not found, return 
+    // if content body not found, return a HTTP 404
     if (!body) {
         return response.status(404).json(
             {
@@ -93,6 +93,7 @@ app.post('/api/persons', (request, response) => {
         .catch(error => next(error))
 
 })
+
 
 const token = morgan.token('body', (request, response) => {
     const body = JSON.stringify(request.body)
