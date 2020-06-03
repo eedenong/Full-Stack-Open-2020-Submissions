@@ -74,23 +74,16 @@ app.post('/api/persons', (request, response) => {
         })
     }
 
-    //check if the number already exists in persons
-    const dupeName = persons.find(p => p.name === name)
-    if (dupeName) {
-        return response.status(400).json({
-            error: 'name must be unique'
-        })
-    }
-
-    const person = {
+    //create the Person
+    const person = new Person({
         name: body.name,
         number: body.number,
-        id: generateRandomId()
-    }
+    })
 
-   
-    persons.concat(person)
-    response.json(person)
+    //save the newly created Person to database
+    person.save().then(savedPerson => {
+        response.json(savedPerson)
+    })
 
 })
 
