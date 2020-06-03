@@ -94,6 +94,21 @@ app.post('/api/persons', (request, response, next) => {
 
 })
 
+//put request for updating a phone number
+app.put('/api/persons/:id', (request, response, next) => {
+    const body = request.body
+    const person = {
+        name : body.name,
+        number: body.number,
+    }
+
+    Person.findByIdAndUpdate(request.params.id, person, { new : true })
+        .then(updatedPerson => {
+            console.log('Person updated');
+            response.json(updatedPerson)
+        })
+        .catch(error => next(error))
+}) 
 
 const token = morgan.token('body', (request, response) => {
     const body = JSON.stringify(request.body)

@@ -5,7 +5,7 @@ const url = process.env.MONGODB_URI
 
 //connect to database
 console.log('connecting to phonebook database ', url);
-mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
     .then(result => {
         console.log('connected to MongoDB (phonebook)');
     })
