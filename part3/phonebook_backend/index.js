@@ -10,9 +10,13 @@ app.use(express.static('build'))
 app.use(cors())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
-const getInfoPage = () => {
+const getInfoPage = (next) => {
     const date = new Date()
-    const size = persons.length
+    const size = 0
+    Person.countDocuments({})
+        .then(count => size = count)
+        .catch(error => next(error))
+        
     return `<div>
     <p>Phonebook has info for ${size} people</p>
     <p>${date}</p>
@@ -30,9 +34,22 @@ app.get('/api/persons', (request, response, next) =>  {
 })
 
 //info page
-app.get('/info', (request, response) => 
-    response.send(getInfoPage())
-)
+app.get('/info', (request, response, next) => {
+    const date = new Date()
+    Person.countDocuments({})
+        .then(count => {
+            console.log('count is: ', count);
+            const size = count
+            response.send(
+                `<div>
+                <p>Phonebook has info for ${size} people</p>
+                <p>${date}</p>
+                </div>`
+            )
+        })
+        .catch(error => next(error))
+    
+})
 
 //get info for single person
 app.get('/api/persons/:id', (request, response, next) => {
