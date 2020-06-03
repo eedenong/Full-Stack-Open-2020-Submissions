@@ -1,11 +1,16 @@
 const mongoose = require('mongoose')
-
+const uniqueValidator = require('mongoose-unique-validator')
 // get the uri of the database
 const url = process.env.MONGODB_URI
 
 //connect to database
 console.log('connecting to phonebook database ', url);
-mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
+mongoose.connect(url, { 
+    useNewUrlParser: true, 
+    useUnifiedTopology: true, 
+    useFindAndModify: false,
+    useCreateIndex: true
+ })
     .then(result => {
         console.log('connected to MongoDB (phonebook)');
     })
@@ -15,9 +20,22 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFind
 
 //define personSchema
 const personSchema = new mongoose.Schema({
-    name: String,
-    number: String,
+    name: {
+        type: String,
+        minlength: 3,
+        required: true,
+        unique: true
+    },
+    number: {
+        type: String,
+        minlength: 8,
+        required: true,
+        unique: true
+    }
 })
+
+//Apply uniqueValidator plugin to use schema
+personSchema.plugin(uniqueValidator)
 
 // set toJSON method of schema
 personSchema.set('toJSON', {

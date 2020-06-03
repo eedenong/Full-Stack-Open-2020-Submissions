@@ -28,6 +28,7 @@ const edit = (newPerson) => {
         return response.data
     })
 }
+
 export default {
     getAll,
     create,

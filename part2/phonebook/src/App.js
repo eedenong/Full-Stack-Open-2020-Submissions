@@ -7,9 +7,6 @@ import Notification from './components/Notification'
 
 const App = () => {
   const [ persons, setPersons ] = useState([])
-  // we will use a counter to keep track of how many people we have added so far
-  // to prevent adding of persons with duplicate ids
-  const [ count, setCount ] = useState(0)
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newFilter, setFilterValue ] = useState('')
@@ -25,10 +22,6 @@ const App = () => {
       .then(returnedPersons => {
         console.log('returnedPersons is', returnedPersons);
         setPersons(returnedPersons)
-        const len = returnedPersons.length
-        // the id of the last person keeps track of how many people we have added so far
-        const totalCount = returnedPersons[len - 1].id
-        setCount(totalCount)
       })
   }, [])
 
@@ -39,7 +32,7 @@ const App = () => {
       <Filter newFilter={newFilter} setFilterValue={setFilterValue} showAll={showAll} setShowAll={setShowAll}/>
       <h2>Add new number</h2>
       <PersonForm persons={persons} setPersons={setPersons} newName={newName} newNumber={newNumber}
-       setNewName={setNewName} setNewNumber={setNewNumber} count={count} setCount={setCount}
+       setNewName={setNewName} setNewNumber={setNewNumber}
       setNotification={setNotification} setError={setError} />
       <h2>Numbers</h2>
       <Numbers persons={persons} setPersons={setPersons} showAll={showAll} newFilter={newFilter} setError={setError} setNotification={setNotification}/>

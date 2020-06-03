@@ -1,14 +1,13 @@
 import React from 'react'
 import numberService from '../services/numbers'
 
-const PersonForm = ({persons, setPersons, newName, newNumber, setNewName, setNewNumber, count, setCount, setNotification, setError}) => {
+const PersonForm = ({persons, setPersons, newName, newNumber, setNewName, setNewNumber, setNotification, setError}) => {
     
     function addEntry() {
         // create a person and add it
         const newPerson = {
             name: newName,
             number: newNumber,
-            id: count + 1
         }
         console.log('new person created: ', newPerson);
         //define the axios post request to put data into the db
@@ -19,14 +18,21 @@ const PersonForm = ({persons, setPersons, newName, newNumber, setNewName, setNew
                 setPersons(persons.concat(returnedPerson))
                 setNewName('')
                 setNewNumber('') 
-                setCount(count + 1)
                 setNotification(`Added ${newName}`)
                 setTimeout(() => {
                     setNotification(null)
                 }, 3000)
             })
             .catch(error => {
-                console.log(error.message);
+                const err = error.response.data
+                console.log(err);
+                setNotification(err.error)
+                setError(true)
+
+                setTimeout(() => {
+                    setNotification(null)
+                    setError(false)
+                }, 5000)
             })
         console.log('person added to database');
         console.log('persons list in addPerson is ', persons)
@@ -53,19 +59,18 @@ const PersonForm = ({persons, setPersons, newName, newNumber, setNewName, setNew
                 setTimeout(() => {
                     setNotification(null)
                 }, 3000)
-            }).catch(error => {
-                setPersons(persons.filter(p => p.id !== newPerson.id))
-                // if there is an error means that the person does not exist in the db
+            })
+            .catch(error => {
+                const err = error.response.data
+                console.log(err);
+                setNotification(err.error)
                 setError(true)
-                setNotification(`Information of ${newPerson.name} has already been removed from the server.`)
-                
+
                 setTimeout(() => {
                     setNotification(null)
                     setError(false)
-                }, 3000)
-            }
-
-            )
+                }, 5000)
+            })
     }
     // function to check phonebook if there is a person with an already existing name 
     function checkDuplicateName() {
