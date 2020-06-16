@@ -27,9 +27,7 @@ const mostBlogs = (blogs) => {
   //have a list of objects,x, containing author, and the number of blogs they have
   //iterate through the list of blogs. for each iteration, check the author, find in x and increment count
   //first get an array of the author names from blogs
-  const names = array.zipWith(blogs, (blog) => {
-    return blog.author
-  })
+  const names = array.zipWith(blogs, (blog) => blog.author)
   const zeroes = new Array(names.length).fill(0)
   let authorCounts = array.zipObject(names, zeroes)
 
@@ -46,18 +44,44 @@ const mostBlogs = (blogs) => {
       count = value
     }
   })
-  const obj = object.create({}, {
+  
+  return object.create({}, {
     author: author,
     blogs: count
   })
 
-  return obj
 }
 
+const mostLikes = (blogs) => {
+  const names = array.zipWith(blogs, (blog) => blog.author)
+  const zeroes = new Array(names.length).fill(0)
+  let authorLikes = array.zipObject(names, zeroes)
+
+  blogs.forEach(blog => {
+    const author = blog.author
+    const likes = authorLikes[author] + blog.likes
+    authorLikes = {...authorLikes, [author]: likes}
+  })
+
+  let author = ""
+  let likes = 0
+  object.forIn(authorLikes, (value, key) => {
+    if (value > likes) {
+      author = key
+      likes = value
+    }
+  })
+  
+  return object.create({}, {
+    author: author,
+    likes: likes
+  })
+}
 
 module.exports = { 
   dummy,
   totalLikes,
   favoriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 }
