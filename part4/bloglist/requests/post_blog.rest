@@ -7,3 +7,15 @@ Content-Type: application/json
     "url": "myfirstblog.zz",
     "likes": 999
 }
+
+###
+
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "My Second Blog",
+    "author": "Alice",
+    "url": "andioop.zz",
+    "likes": 1
+}
