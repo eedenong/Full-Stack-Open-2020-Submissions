@@ -67,6 +67,14 @@ test('if likes property of blog is missing, defaults to 0', async () => {
     })
 })
 
+test('if title and url properties are missing from request, responds with 400 Bad Request', async () => {
+  const newBlogWithoutTitleAndUrl = helper.newBlogWithoutTitleAndUrl
+  await api
+    .post('/api/blogs')
+    .send(newBlogWithoutTitleAndUrl)
+    .expect(400)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
