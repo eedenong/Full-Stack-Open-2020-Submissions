@@ -31,6 +31,7 @@ test('all blogs are returned', async () => {
   expect(response.body).toHaveLength(helper.initialBlogs.length)
 })
 
+
 //verifies unique identifier propery of blog poses
 test('unique identifier propery of blog posts is named id', async () => {
   const response = await api.get('/api/blogs')
@@ -54,6 +55,16 @@ test('can add a new blog post', async () => {
   //verify that the content is saved correctly
   const titles = blogsAtEnd.map(blogs => blogs.title)
   expect(titles).toContain(newBlog.title)
+})
+
+test('if likes property of blog is missing, defaults to 0', async () => {
+  const newBlogWithoutLikes = helper.newBlogWithoutLikes
+  await api
+    .post('/api/blogs')
+    .send(newBlogWithoutLikes)
+    .expect(res => {
+      res.body.likes === 0
+    })
 })
 
 afterAll(() => {
