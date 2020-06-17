@@ -1,4 +1,5 @@
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 const newBlog = 
   {
@@ -30,6 +31,32 @@ const initialBlogs = [
   { _id: "5a422bc61b54a676234d17fc", title: "Type wars", author: "Robert C. Martin", url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html", likes: 2, __v: 0 }
 ]
 
+const initialUsers = [
+  {
+    "username": "chickenwingz97",
+    "name": "Mikey D",
+    "password": "ilovechickenwingz"
+  },
+  {
+    "username": "pancakeboi1",
+    "name": "Chuck E",
+    "password": "pancakez4lyfe"
+  }
+]
+const newUserInvalidPassword = 
+{
+  "username": "hehexd",
+  "name": "Chuck E",
+  "password": "no"
+}
+
+const newUserInvalidUsername =
+{
+  "username": "no",
+  "name": "Chuck E",
+  "password": "hehexd"
+}
+
 const blogsInDb = async () => {
   const blogs = await Blog.find({})
   return blogs.map(blog => blog.toJSON())
@@ -39,11 +66,21 @@ const getBlogById = async (id) => {
   const blog = await Blog.findById(id)
   return blog.toJSON()
 }
+
+const usersInDb = async () => {
+  const users = await User.find({})
+  return users.map(user => user.toJSON())
+}
+
 module.exports = {
   newBlog,
   initialBlogs,
   newBlogWithoutLikes,
   newBlogWithoutTitleAndUrl,
+  initialUsers,
+  newUserInvalidPassword,
+  newUserInvalidUsername,
   blogsInDb,
-  getBlogById
+  getBlogById,
+  usersInDb,
 }

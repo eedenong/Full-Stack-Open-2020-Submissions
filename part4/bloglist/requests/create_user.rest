@@ -6,3 +6,36 @@ Content-Type: application/json
     "name": "Mikey D",
     "password": "ilovechickenwingz"
 }
+
+###
+
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+    "username": "pancakeboi1",
+    "name": "Chuck E",
+    "password": "pancakez4lyfe"
+}
+
+###
+
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+    "username": "hehexd",
+    "name": "Chuck E",
+    "password": "no"
+}
+
+###
+
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+    "username": "no",
+    "name": "Chuck E",
+    "password": "hehexd"
+}
