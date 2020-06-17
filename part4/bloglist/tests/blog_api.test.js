@@ -4,16 +4,37 @@ const app = require('../app')
 const api = supertest(app)
 const helper = require('./test_helper')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 //beforeEach to start from fresh DB
 beforeEach(async () => {
   await Blog.deleteMany({})
- // console.log('cleared')
+  await User.deleteMany({})
   const blogObjects = helper.initialBlogs
-    .map((blog) => new Blog(blog))
+  const userObjects = helper.initialUsers
+  const userPromiseArr = userObjects.map(async (user) => {
+    await api.post('/api/users').send(user)
 
-  const promiseArr = blogObjects.map(blog => blog.save())
-  await Promise.all(promiseArr)
+  })
+  await Promise.all(userPromiseArr)
+  //for each blog, login with a random user and assign that blog to the user
+  const populateBlogsPromiseArr = async () => {
+    const len = blogObjects.length
+    for (let i = 0; i < len; i++) {
+      const user = userObjects[Math.floor(Math.random() * userObjects.length)]
+      const loginResponse = await api.post('/api/login').send(user).expect(200)
+      const token = 'bearer '.concat(loginResponse.body.token)
+      const response = await api 
+        .post('/api/blogs')
+        .send(blogObjects[i])
+        .set('Authorization', token)
+        .expect(201)
+      blogObjects[i] = response.body
+    }
+  }
+  
+  const blogsPromiseArr = populateBlogsPromiseArr()
+  await Promise.resolve(blogsPromiseArr)
 })
 
 describe('if there are blogs initially', () => {
@@ -26,9 +47,7 @@ describe('if there are blogs initially', () => {
   })
   
   test('all blogs are returned', async () => {
-    //console.log('in second test')
     const response = await api.get('/api/blogs')
-    //console.log('response body ', response.body)
     expect(response.body).toHaveLength(helper.initialBlogs.length)
   })
   
@@ -43,12 +62,15 @@ describe('if there are blogs initially', () => {
 })
 
 describe('addition of a new blog', () => {
-  test('succeeds with 201 with valid data', async () => {
+  test('succeeds with 201 with valid data and token', async () => {
     const newBlog = helper.newBlog
+    const loginResponse = await api.post('/api/login').send(helper.userForValidToken).expect(200)
+    const token = 'bearer '.concat(loginResponse.body.token)
     await api
-      .post('/api/blogs')
-      .send(newBlog)
-      .expect(201)
+        .post('/api/blogs')
+        .send(newBlog)
+        .set('Authorization', token)
+        .expect(201)
   
     //verify that the total number of blogs increase by one
     const blogsAtEnd = await helper.blogsInDb()
@@ -60,6 +82,19 @@ describe('addition of a new blog', () => {
     expect(titles).toContain(newBlog.title)
   })
   
+  test('fails with 401 Unauthorized if token is missing', async () => {
+    const newBlog = helper.newBlog
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(401)
+
+    //verify that the total number of blogs increase by one
+    const blogsAtEnd = await helper.blogsInDb()
+  
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+  })
+
   test('has likes defaulted to 0, if missing from request', async () => {
     const newBlogWithoutLikes = helper.newBlogWithoutLikes
     await api
@@ -72,19 +107,43 @@ describe('addition of a new blog', () => {
   
   test('fails with 400 Bad Request if title and url are missing', async () => {
     const newBlogWithoutTitleAndUrl = helper.newBlogWithoutTitleAndUrl
+    const loginResponse = await api.post('/api/login').send(helper.userForValidToken).expect(200)
+    const token = 'bearer '.concat(loginResponse.body.token)
     await api
       .post('/api/blogs')
       .send(newBlogWithoutTitleAndUrl)
+      .set('Authorization', token)
       .expect(400)
   })
   
 })
+
 describe('deletion of a blog', () => {
-  test('succeeds with status 204 if id is valid', async () => {
+  test('succeeds with status 204 if id and token is valid', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
+    const blogUserId = blogToDelete.user.id.toString()
+    const blogUser = await User.findById(blogUserId)
+    const blogUserUsername = blogUser.username
+    const getUserPassword = (users, username) => {
+      let password = ""
+      for (const user of users) {
+        if (user.username === username) {
+          password = user.password
+        }
+      }
+      return password
+    }
+    const blogUserPassword = getUserPassword(helper.initialUsers, blogUserUsername)
+    const userToSend = {
+      username: blogUserUsername,
+      password: blogUserPassword
+    }
+    const loginResponse = await api.post('/api/login').send(userToSend).expect(200)
+    const token = 'bearer '.concat(loginResponse.body.token)
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', token)
       .expect(204)
 
     //verify that the blog has been deleted successfully from the db
@@ -93,21 +152,6 @@ describe('deletion of a blog', () => {
 
     const contents = blogsAtEnd.map(r => r.title)
     expect(contents).not.toContain(blogToDelete.content)
-  })
-})
-
-describe('updating a blog', () => {
-  test('succeeds with status 200, with number of likes updated', async () => {
-    const blogsAtStart = await helper.blogsInDb()
-    const blogBeforeUpdate = blogsAtStart[0]
-    const blogId = blogBeforeUpdate.id
-    await api
-      .put(`/api/blogs/${blogId}`)
-      .send({...blogBeforeUpdate, likes: 999 })
-      .expect(200)
-
-    const blogAfterUpdate = await helper.getBlogById(blogId)
-    expect(blogBeforeUpdate.likes).not.toEqual(blogAfterUpdate.likes)
   })
 })
 
