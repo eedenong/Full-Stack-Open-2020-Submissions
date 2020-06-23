@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -7,8 +8,12 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [notification, setNotification] = useState(null)
+  const [isErrorNotification, setIsErrorNotification] = useState(false)
   const [user, setUser] = useState(null)
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -36,20 +41,16 @@ const App = () => {
       blogService.setToken(user.token)
       //save the user to local storage
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
-      const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
-      console.log('loggedUserJSON', loggedUserJSON)
-      if (loggedUserJSON) {
-        console.log('user successfully logged in json local storage', loggedUserJSON)
-      }
       //set user
       setUser(user)
       //reset username and password fields
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
+      setNotification('Wrong username or password')
+      setIsErrorNotification(true)
       setTimeout(() => {
-        setErrorMessage(null)
+        setNotification(null)
       }, 5000)
     }
 
@@ -69,11 +70,56 @@ const App = () => {
     }
   }
 
-  const showBlogs = () => (
+  const addBlog = (event) => {
+    event.preventDefault()
+    try {
+      const blogObject = {
+        title: title,
+        author: author,
+        url: url
+      }
+      blogService
+        .addBlog(blogObject)
+        .then(returnedBlogObject => {
+          setBlogs(blogs.concat(returnedBlogObject))
+          setTitle('')
+          setAuthor('')
+          setUrl('')
+          //notify user
+          setNotification(`A new blog ${title} by ${author} added`)
+          setIsErrorNotification(false)
+          setTimeout(() => {
+            setNotification(null)
+          }, 5000)
+        })
+
+    } catch (exception) {
+      setNotification('Error adding blog')
+      setIsErrorNotification(true)
+      setTimeout(() => {
+        setNotification(null)
+      })
+      console.log('error adding blog', exception)
+    }
+  }
+
+  const blogForm = () => (
     <div>
-      <h2>blogs</h2>
-      <div>{user.name} logged in <button onClick={handleLogout}>logout</button> </div>
-      <br />
+      <form onSubmit={addBlog}>
+        <div>
+          title:<input type="text" value={title} name="Title" onChange={({ target }) => setTitle(target.value)} />
+          <br/>
+          author:<input type="text" value={author} name="Author" onChange={({ target }) => setAuthor(target.value)} />
+          <br/>
+          url:<input type="text" value={url} name="Url" onChange={({ target }) => setUrl(target.value)} />
+        </div>
+        <button type="submit">create</button>
+      </form>
+    </div>
+  )
+
+  const blogsList = () => (
+    <div>
       <div>
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />
@@ -82,9 +128,25 @@ const App = () => {
     </div>
   )
 
+  const blogsPage = () => (
+    <div>
+      <h2>blogs</h2>
+      <Notification message={notification} isErrorNotification={isErrorNotification} />
+      <div>{user.name} logged in <button onClick={handleLogout}>logout</button> </div>
+      <br />
+      <div>
+        {blogForm()}
+      </div>
+      <div>
+        {blogsList()}
+      </div>
+    </div>
+  )
+
   const loginForm = () => (
     <div>
       <h2>log in to application</h2>
+      <Notification message={notification} isErrorNotification={isErrorNotification} />
       <form onSubmit={handleLogin}>
         <div>
           username
@@ -111,12 +173,9 @@ const App = () => {
 
   return (
     <div>
-      <div>
-        {errorMessage}
-      </div>
       { user ===  null
         ? loginForm()
-        : showBlogs()
+        : blogsPage()
       }
     </div>
   )
