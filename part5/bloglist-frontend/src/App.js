@@ -95,6 +95,18 @@ const App = () => {
       console.log('error adding blog', exception)
     }
   }
+
+  const likeBlog = (blog) => {
+    try {
+      blogService
+        .likeBlog(blog)
+        .then(returnedBlogObject => {
+          console.log('blogObject with updated likes', returnedBlogObject)
+        })
+    } catch (exception) {
+      console.log('error in liking blog', exception)
+    }
+  }
   
   const blogForm = () => (
     <Togglable showButtonLabel='create new blog' hideButtonLabel='cancel' ref={blogFormRef}>
@@ -106,7 +118,7 @@ const App = () => {
     <div>
       <div>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} addLikeToBlog={likeBlog} />
         )}
       </div>
     </div>
