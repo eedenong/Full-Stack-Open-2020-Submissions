@@ -1,19 +1,20 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
+import BlogForm from './components/BlogForm'
+import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [notification, setNotification] = useState(null)
   const [isErrorNotification, setIsErrorNotification] = useState(false)
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+  
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -53,7 +54,6 @@ const App = () => {
         setNotification(null)
       }, 5000)
     }
-
   }
 
   const handleLogout = (event) => {
@@ -70,29 +70,22 @@ const App = () => {
     }
   }
 
-  const addBlog = (event) => {
-    event.preventDefault()
+  const blogFormRef = useRef()
+  
+  const addBlog = (blogObject) => {
     try {
-      const blogObject = {
-        title: title,
-        author: author,
-        url: url
-      }
+      blogFormRef.current.toggleVisibility()
       blogService
         .addBlog(blogObject)
         .then(returnedBlogObject => {
           setBlogs(blogs.concat(returnedBlogObject))
-          setTitle('')
-          setAuthor('')
-          setUrl('')
           //notify user
-          setNotification(`A new blog ${title} by ${author} added`)
+          setNotification(`A new blog ${returnedBlogObject.title} by ${returnedBlogObject.author} added`)
           setIsErrorNotification(false)
           setTimeout(() => {
             setNotification(null)
           }, 5000)
         })
-
     } catch (exception) {
       setNotification('Error adding blog')
       setIsErrorNotification(true)
@@ -102,20 +95,11 @@ const App = () => {
       console.log('error adding blog', exception)
     }
   }
-
+  
   const blogForm = () => (
-    <div>
-      <form onSubmit={addBlog}>
-        <div>
-          title:<input type="text" value={title} name="Title" onChange={({ target }) => setTitle(target.value)} />
-          <br/>
-          author:<input type="text" value={author} name="Author" onChange={({ target }) => setAuthor(target.value)} />
-          <br/>
-          url:<input type="text" value={url} name="Url" onChange={({ target }) => setUrl(target.value)} />
-        </div>
-        <button type="submit">create</button>
-      </form>
-    </div>
+    <Togglable buttonLabel='create new blog' ref={blogFormRef}>
+      <BlogForm createBlog={addBlog} /> 
+    </Togglable>
   )
 
   const blogsList = () => (
@@ -143,38 +127,25 @@ const App = () => {
     </div>
   )
 
-  const loginForm = () => (
+  const loginPage = () => (
     <div>
       <h2>log in to application</h2>
       <Notification message={notification} isErrorNotification={isErrorNotification} />
-      <form onSubmit={handleLogin}>
-        <div>
-          username
-          <input
-            type="text"
-            value={username}
-            name="username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </div>
-        <div>
-          password
-          <input 
-            type="password"
-            value={password}
-            name="password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <button type="submit">login</button>
-      </form>
+      <Togglable buttonLabel='login'>
+        <LoginForm 
+          username={username}
+          password={password}
+          handleUsernameChange={({ target }) => setUsername(target.value)}
+          handlePasswordChange={({ target }) => setPassword(target.value)}
+          handleLogin={handleLogin} />
+      </Togglable>  
     </div>
   )
 
   return (
     <div>
       { user ===  null
-        ? loginForm()
+        ? loginPage()
         : blogsPage()
       }
     </div>
