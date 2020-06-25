@@ -33,5 +33,10 @@ const likeBlog = async (blog) => {
   return response.data
 }
 
+const deleteBlog = async (blog) => {
+  const blogUrl = baseUrl.concat(`/${blog.id}`)
+  const response = await axios.delete(blogUrl)
+  return response.data
+}
 
-export default { getAll, setToken, addBlog, likeBlog }
+export default { getAll, setToken, addBlog, likeBlog, deleteBlog }

@@ -15,11 +15,23 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   
+  const blogsCompare = (a, b) => {
+    const aLikes = a.likes
+    const bLikes = b.likes
+    if (aLikes < bLikes) {
+      return 1
+    }
+    if (aLikes > bLikes) {
+      return -1
+    }
+    return 0
+  }
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+    blogService.getAll().then(blogs => {
+      const sortedBlogs = blogs.sort(blogsCompare)
+      setBlogs(sortedBlogs)
+    })  
   }, [])
 
   //check if user details can be found in local storage
@@ -107,6 +119,19 @@ const App = () => {
       console.log('error in liking blog', exception)
     }
   }
+
+  const deleteBlog = (blog) => {
+    try {
+      const deleteConfirmed = window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)  
+      if (deleteConfirmed) {
+        blogService
+          .deleteBlog(blog)
+          .then(response => console.log('delete response', response))
+      }
+    } catch (exception) {
+      console.log('error deleting blog', exception)
+    }
+  }
   
   const blogForm = () => (
     <Togglable showButtonLabel='create new blog' hideButtonLabel='cancel' ref={blogFormRef}>
@@ -118,7 +143,7 @@ const App = () => {
     <div>
       <div>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} addLikeToBlog={likeBlog} />
+          <Blog key={blog.id} blog={blog} addLikeToBlog={likeBlog} handleBlogDelete={deleteBlog} />
         )}
       </div>
     </div>

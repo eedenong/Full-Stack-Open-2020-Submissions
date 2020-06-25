@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const Blog = ({ blog, addLikeToBlog }) => {
+const Blog = ({ blog, addLikeToBlog, handleBlogDelete }) => {
   const [visible, setVisible] = useState(false)
   const [likes, setLikes] = useState(blog.likes)
   const showWhenVisible = { display: visible ? '' : 'none' }
@@ -19,9 +19,31 @@ const Blog = ({ blog, addLikeToBlog }) => {
 
   const likeBlog = (event) => {
     event.preventDefault()
-    addLikeToBlog(blog)
     setLikes(likes + 1)
+    addLikeToBlog({
+      ...blog,
+      likes: likes
+    })
+    
   }
+  
+  const deleteBlog = (event) => {
+    handleBlogDelete(blog)
+    window.location.reload(false)
+  }
+
+  const deleteButton = () => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
+    //check if blog post was added by current user, via usernames
+    const currUser = JSON.parse(loggedUserJSON).username
+    const blogUser = blog.user.username
+    if (currUser === blogUser) {
+      return (
+        <button onClick={deleteBlog}>remove</button>
+      )
+    }
+  }
+
   return (
     <div style={blogStyle}>
       {blog.title} by {blog.author} 
@@ -32,6 +54,7 @@ const Blog = ({ blog, addLikeToBlog }) => {
         {blog.url}<br/>
         {likes}<button onClick={likeBlog}>like</button><br/>
         {blog.user.name}<br/>
+        {deleteButton()}
       </div>
     </div>
 

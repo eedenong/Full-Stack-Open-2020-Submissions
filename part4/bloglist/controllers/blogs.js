@@ -43,26 +43,8 @@ blogsRouter.post('/', async (request, response) => {
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
-  //console.log('deleting blog...')
-  //get token of the user who sent the request
-  const userToken = request.token
-  //get the id of the user
-  const decodedToken = jwt.verify(userToken, process.env.SECRET)
-  //console.log('decoded token', decodedToken)
-  const userId = decodedToken.id
-  //get the blog to be deleted
-  const blog = await Blog.findById(request.params.id)
-  //console.log('blog user:', blog.user)
-  //check if the blog's user is the same as the userId
-  const sameCreator = blog.user.toString() === userId.toString()
-
-  if (sameCreator) {
-    await Blog.findByIdAndRemove(request.params.id)
-    response.status(204).end()
-  } else {
-    response.status(401).json({ error: 'not the creator of the blog, cannot delete' })
-  }
-  
+  await Blog.findByIdAndRemove(request.params.id)
+  response.status(204).end()
 })
 
 blogsRouter.get('/:id', async (request, response) => {
