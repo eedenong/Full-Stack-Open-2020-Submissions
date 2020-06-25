@@ -20,4 +20,5 @@ const addBlog = async (newBlog) => {
   return response.data
 }
 
+
 export default { getAll, setToken, addBlog }

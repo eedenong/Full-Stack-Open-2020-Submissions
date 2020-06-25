@@ -97,7 +97,7 @@ const App = () => {
   }
   
   const blogForm = () => (
-    <Togglable buttonLabel='create new blog' ref={blogFormRef}>
+    <Togglable showButtonLabel='create new blog' hideButtonLabel='cancel' ref={blogFormRef}>
       <BlogForm createBlog={addBlog} /> 
     </Togglable>
   )
@@ -131,7 +131,7 @@ const App = () => {
     <div>
       <h2>log in to application</h2>
       <Notification message={notification} isErrorNotification={isErrorNotification} />
-      <Togglable buttonLabel='login'>
+      <Togglable showButtonLabel='login' hideButtonLabel='cancel'>
         <LoginForm 
           username={username}
           password={password}
