@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 
 const Blog = ({ blog, addLikeToBlog, handleBlogDelete }) => {
   const [visible, setVisible] = useState(false)
@@ -24,10 +25,9 @@ const Blog = ({ blog, addLikeToBlog, handleBlogDelete }) => {
       ...blog,
       likes: likes
     })
-    
   }
-  
-  const deleteBlog = (event) => {
+
+  const deleteBlog = () => {
     handleBlogDelete(blog)
     window.location.reload(false)
   }
@@ -44,9 +44,15 @@ const Blog = ({ blog, addLikeToBlog, handleBlogDelete }) => {
     }
   }
 
+  Blog.propTypes = {
+    blog: PropTypes.object.isRequired,
+    addLikeToBlog: PropTypes.func.isRequired,
+    handleBlogDelete: PropTypes.func.isRequire
+  }
+
   return (
     <div style={blogStyle}>
-      {blog.title} by {blog.author} 
+      {blog.title} by {blog.author}
       <button onClick={toggleVisibility}>
         {visible ? 'hide' : 'view'}
       </button>
@@ -57,7 +63,6 @@ const Blog = ({ blog, addLikeToBlog, handleBlogDelete }) => {
         {deleteButton()}
       </div>
     </div>
-
   )
 }
 

@@ -14,7 +14,7 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  
+
   const blogsCompare = (a, b) => {
     const aLikes = a.likes
     const bLikes = b.likes
@@ -31,7 +31,7 @@ const App = () => {
     blogService.getAll().then(blogs => {
       const sortedBlogs = blogs.sort(blogsCompare)
       setBlogs(sortedBlogs)
-    })  
+    })
   }, [])
 
   //check if user details can be found in local storage
@@ -83,7 +83,7 @@ const App = () => {
   }
 
   const blogFormRef = useRef()
-  
+
   const addBlog = (blogObject) => {
     try {
       blogFormRef.current.toggleVisibility()
@@ -122,7 +122,7 @@ const App = () => {
 
   const deleteBlog = (blog) => {
     try {
-      const deleteConfirmed = window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)  
+      const deleteConfirmed = window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)
       if (deleteConfirmed) {
         blogService
           .deleteBlog(blog)
@@ -132,10 +132,10 @@ const App = () => {
       console.log('error deleting blog', exception)
     }
   }
-  
+
   const blogForm = () => (
     <Togglable showButtonLabel='create new blog' hideButtonLabel='cancel' ref={blogFormRef}>
-      <BlogForm createBlog={addBlog} /> 
+      <BlogForm createBlog={addBlog} />
     </Togglable>
   )
 
@@ -169,13 +169,13 @@ const App = () => {
       <h2>log in to application</h2>
       <Notification message={notification} isErrorNotification={isErrorNotification} />
       <Togglable showButtonLabel='login' hideButtonLabel='cancel'>
-        <LoginForm 
+        <LoginForm
           username={username}
           password={password}
           handleUsernameChange={({ target }) => setUsername(target.value)}
           handlePasswordChange={({ target }) => setPassword(target.value)}
           handleLogin={handleLogin} />
-      </Togglable>  
+      </Togglable>
     </div>
   )
 
