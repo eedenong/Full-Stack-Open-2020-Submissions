@@ -34,6 +34,9 @@ const Blog = ({ blog, addLikeToBlog, handleBlogDelete }) => {
 
   const deleteButton = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
+    if (!loggedUserJSON) {
+      return null
+    }
     //check if blog post was added by current user, via usernames
     const currUser = JSON.parse(loggedUserJSON).username
     const blogUser = blog.user.username
@@ -44,19 +47,19 @@ const Blog = ({ blog, addLikeToBlog, handleBlogDelete }) => {
     }
   }
 
-  Blog.propTypes = {
-    blog: PropTypes.object.isRequired,
-    addLikeToBlog: PropTypes.func.isRequired,
-    handleBlogDelete: PropTypes.func.isRequire
-  }
+  // Blog.propTypes = {
+  //   blog: PropTypes.object.isRequired,
+  //   addLikeToBlog: PropTypes.func.isRequired,
+  //   handleBlogDelete: PropTypes.func.isRequired
+  // }
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className='blog'>
       {blog.title} by {blog.author}
       <button onClick={toggleVisibility}>
         {visible ? 'hide' : 'view'}
       </button>
-      <div style={showWhenVisible}>
+      <div style={showWhenVisible} className='blogDetails'>
         {blog.url}<br/>
         {likes}<button onClick={likeBlog}>like</button><br/>
         {blog.user.name}<br/>
