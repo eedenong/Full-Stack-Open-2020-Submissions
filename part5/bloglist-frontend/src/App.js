@@ -107,7 +107,7 @@ const App = () => {
       console.log('error adding blog', exception)
     }
   }
-
+  
   const likeBlog = (blog) => {
     try {
       blogService
