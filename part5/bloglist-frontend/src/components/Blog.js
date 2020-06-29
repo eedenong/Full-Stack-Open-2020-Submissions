@@ -61,7 +61,7 @@ const Blog = ({ blog, addLikeToBlog, handleBlogDelete }) => {
       </button>
       <div style={showWhenVisible} className='blogDetails'>
         {blog.url}<br/>
-        {likes}<button onClick={likeBlog}>like</button><br/>
+        {likes}<button onClick={likeBlog} className='likeButton'>like</button><br/>
         {blog.user.name}<br/>
         {deleteButton()}
       </div>
