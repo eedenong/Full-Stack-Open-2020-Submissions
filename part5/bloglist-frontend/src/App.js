@@ -140,7 +140,7 @@ const App = () => {
   )
 
   const blogsList = () => (
-    <div>
+    <div id='blogs-list'>
       <div>
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} addLikeToBlog={likeBlog} handleBlogDelete={deleteBlog} />
