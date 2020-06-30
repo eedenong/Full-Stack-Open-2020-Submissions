@@ -1,12 +1,19 @@
 describe('Blog app', function() {
   beforeEach(function() {
     cy.request('POST', 'http://localhost:3001/api/testing/reset')
-    const user = {
+    const user1 = {
       name: 'John Wick',
       username: 'johnwick',
       password: 'password'
     }
-    cy.request('POST', 'http://localhost:3001/api/users', user)
+
+    const user2 = {
+      name: 'Mr Bob',
+      username: 'mrbob',
+      password: 'hello'
+    }
+    cy.request('POST', 'http://localhost:3001/api/users', user1)
+    cy.request('POST', 'http://localhost:3001/api/users', user2)
     cy.visit('http://localhost:3000')
     cy.viewport(960,540)
   })
@@ -64,6 +71,7 @@ describe('Blog app', function() {
 
     describe('and a blog exists', function() {
       beforeEach(function() {
+        //creates a blog as user johnwick
         cy.createBlog({
           title: 'this is a blog',
           author: 'An Anonymous Author',
@@ -72,14 +80,25 @@ describe('Blog app', function() {
       })
 
       it('user can like the blog', function() {
-        cy.contains('this is a blog by An Anonymous Author')
-          .contains('view')
-          .click()
-          .parent()
-          .as('viewedBlog')
+        cy.viewBlog('this is a blog by An Anonymous Author').as('viewedBlog')
         cy.get('@viewedBlog').contains('like').click()
         cy.get('@viewedBlog').contains('1')
 
+      })
+
+      it('user who created the blog is able to delete the blog', function() {
+        cy.viewBlog('this is a blog by An Anonymous Author').as('viewedBlog')
+        cy.get('@viewedBlog').contains('remove').click()
+        cy.visit('http://localhost:3000')
+        cy.get('#blogs-list')
+          .should('not.contain', 'this is a blog by An Anonymous Author')
+      })
+
+      it('other users who did not create blog cannot delete the blog', function() {
+        cy.login({ username: 'mrbob', password: 'hello' })
+        cy.viewBlog('this is a blog by An Anonymous Author').as('viewedBlog')
+        cy.get('@viewedBlog')
+          .should('not.contain', 'remove')
       })
     })
   })

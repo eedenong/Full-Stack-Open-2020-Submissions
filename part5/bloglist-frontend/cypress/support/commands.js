@@ -43,3 +43,10 @@ Cypress.Commands.add('createBlog', ({ title, author, url }) => {
   })
   cy.visit('http://localhost:3000')
 })
+
+Cypress.Commands.add('viewBlog', (blogName) => {
+  cy.contains(blogName)
+    .contains('view')
+    .click()
+    .parent()
+})
