@@ -37,7 +37,7 @@ const App = () => {
   //check if user details can be found in local storage
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
-    console.log('loggedUserJSON is', loggedUserJSON)
+    //console.log('loggedUserJSON is', loggedUserJSON)
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
@@ -141,11 +141,9 @@ const App = () => {
 
   const blogsList = () => (
     <div id='blogs-list'>
-      <div>
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} addLikeToBlog={likeBlog} handleBlogDelete={deleteBlog} />
         )}
-      </div>
     </div>
   )
 

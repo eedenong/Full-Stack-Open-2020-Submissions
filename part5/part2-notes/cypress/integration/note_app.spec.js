@@ -53,7 +53,7 @@ describe('Note app', function() {
         cy.contains('another note cypress')
           .contains('make important')
           .click()
-        
+
         cy.contains('another note cypress')
           .contains('make not important')
       })

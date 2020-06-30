@@ -101,5 +101,40 @@ describe('Blog app', function() {
           .should('not.contain', 'remove')
       })
     })
+
+    describe('and several blogs exists', function() {
+      beforeEach(function() {
+        cy.createBlog({
+          title: 'I should be top',
+          author: 'Author 1',
+          url: 'blog1.com',
+          likes: 3
+        })
+        cy.createBlog({
+          title: 'I should be bottom',
+          author: 'Author 2',
+          url: 'blog2.com',
+          likes: 1
+        })
+        cy.createBlog({
+          title: 'I should be middle',
+          author: 'Author 3',
+          url: 'blog3.com',
+          likes: 2
+        })
+      })
+
+      it('blogs are sorted according in descending order of likes', function() {
+        cy.get('#blogs-list')
+          .then(blogsListDiv => {
+            cy.get('.blog')
+          })
+          .then(blogs => {
+            cy.wrap(blogs[0]).should('contain', 'I should be top')
+            cy.wrap(blogs[1]).should('contain', 'I should be middle')
+            cy.wrap(blogs[2]).should('contain', 'I should be bottom')
+          })
+      })
+    })
   })
 })
