@@ -65,7 +65,7 @@ describe('Blog app', function() {
         .and('have.css', 'border-style', 'solid')
       
       cy.get('#blogs-list')
-        .contains('My First Blog')
+        .contains('My First Blog by John Wick')
 
     })
 

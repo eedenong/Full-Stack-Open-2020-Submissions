@@ -47,6 +47,6 @@ Cypress.Commands.add('createBlog', ({ title, author, url, likes }) => {
 Cypress.Commands.add('viewBlog', (blogName) => {
   cy.contains(blogName)
     .contains('view')
-    .click()
+    .click
     .parent()
 })

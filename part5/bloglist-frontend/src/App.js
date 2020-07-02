@@ -15,7 +15,7 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
-  const blogsCompare = (a, b) => {
+  const byBlogLikes = (a, b) => {
     const aLikes = a.likes
     const bLikes = b.likes
     if (aLikes < bLikes) {
@@ -29,8 +29,7 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs => {
-      const sortedBlogs = blogs.sort(blogsCompare)
-      setBlogs(sortedBlogs)
+      setBlogs(blogs)
     })
   }, [])
 
@@ -141,7 +140,7 @@ const App = () => {
 
   const blogsList = () => (
     <div id='blogs-list'>
-        {blogs.map(blog =>
+        {blogs.sort(byBlogLikes).map(blog =>
           <Blog key={blog.id} blog={blog} addLikeToBlog={likeBlog} handleBlogDelete={deleteBlog} />
         )}
     </div>
