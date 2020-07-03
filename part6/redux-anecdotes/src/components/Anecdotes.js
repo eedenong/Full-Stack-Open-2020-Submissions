@@ -17,10 +17,19 @@ const Anecdote = ({ anecdote, handleClick }) => {
 const Anecdotes = () => {
   const dispatch = useDispatch()
   const anecdotes = useSelector(state => state)
-  
+  const byLikes = (a, b) => {
+    if (a.votes > b.votes) {
+      return -1
+    } else if (a.votes < b.votes) {
+      return 1
+    } else {
+      return 0
+    }
+  }
+
   return (
     <ul>
-      {anecdotes.map(anecdote =>
+      {anecdotes.sort(byLikes).map(anecdote =>
         <Anecdote
           key={anecdote.id}
           anecdote={anecdote}
