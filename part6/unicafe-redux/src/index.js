@@ -27,7 +27,7 @@ const App = () => {
         good: {store.getState().good}
       </div>
       <div>
-        ok: {store.getState().ok}
+   ``     ok: {store.getState().ok}
       </div>
       <div>
         bad: {store.getState().bad}
