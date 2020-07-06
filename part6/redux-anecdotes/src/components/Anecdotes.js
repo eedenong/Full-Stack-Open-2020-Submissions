@@ -1,6 +1,7 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { voteAnecdote } from '../reducers/anecdoteReducer'
+import { displayNotification, hideNotification } from '../reducers/notificationReducer'
 
 const Anecdote = ({ anecdote, handleClick }) => {
   return (
@@ -16,7 +17,13 @@ const Anecdote = ({ anecdote, handleClick }) => {
 
 const Anecdotes = () => {
   const dispatch = useDispatch()
-  const anecdotes = useSelector(state => state)
+  const anecdotes = useSelector(({ filter, anecdotes }) => {
+    if (filter === 'ALL') {
+      return anecdotes
+    }
+
+    return anecdotes.filter(anecdote => anecdote.content.includes(filter))
+  })
   const byLikes = (a, b) => {
     if (a.votes > b.votes) {
       return -1
@@ -27,13 +34,20 @@ const Anecdotes = () => {
     }
   }
 
+  const vote = (anecdote) => {
+    dispatch(voteAnecdote(anecdote.id))
+    const notification = `you voted ${anecdote.content}`
+    dispatch(displayNotification(notification))
+    setTimeout(() => dispatch(hideNotification()), 5000)
+  }
+
   return (
     <ul>
       {anecdotes.sort(byLikes).map(anecdote =>
         <Anecdote
           key={anecdote.id}
           anecdote={anecdote}
-          handleClick={() => dispatch(voteAnecdote(anecdote.id))}
+          handleClick={() => vote(anecdote)}
         />
       )}
     </ul>
