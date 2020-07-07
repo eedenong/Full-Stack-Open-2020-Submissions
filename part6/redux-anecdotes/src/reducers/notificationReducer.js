@@ -9,16 +9,31 @@ const notificationReducer = (state = '', action) => {
   }
 }
 
-export const displayNotification = notification => {
-  return {
-    type: 'SHOW',
-    notification
+export const setNotification = (notification, timeout) => {
+  return async dispatch => {
+    dispatch(displayNotification(notification))
+      .then(() => {
+        console.log('inside next part of promise chain')
+        const timeoutInMs = timeout * 1000
+        setTimeout(() => dispatch(hideNotification()), timeoutInMs)
+      })
   }
 }
 
-export const hideNotification = () => {
-  return {
-    type: 'HIDE',
+const displayNotification = notification => {
+  return async dispatch => {
+    dispatch({
+      type: 'SHOW',
+      notification
+    })
+  }
+}
+
+const hideNotification = () => {
+  return async dispatch => {
+    dispatch({
+      type: 'HIDE'
+    })
   }
 }
 
