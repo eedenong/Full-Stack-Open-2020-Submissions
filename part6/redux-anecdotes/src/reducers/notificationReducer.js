@@ -13,7 +13,6 @@ export const setNotification = (notification, timeout) => {
   return async dispatch => {
     dispatch(displayNotification(notification))
       .then(() => {
-        console.log('inside next part of promise chain')
         const timeoutInMs = timeout * 1000
         setTimeout(() => dispatch(hideNotification()), timeoutInMs)
       })
